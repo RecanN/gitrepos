@@ -15,7 +15,7 @@ class GithubRepos extends React.Component{
     date.setDate(date.getDate() - 30);
     var dateString = date.toISOString().split('T')[0];
     
-    fetch ('https://api.github.com/search/repositories?q=created:>'+dateString+'&sort=stars&order=desc')
+    fetch ('https://api.github.com/search/repositories?q=created:>'+dateString+'&sort=stars&order=desc&page='+this.state.page)
     .then(response => response.json())
     .then(json => {
       this.setState({
@@ -25,6 +25,22 @@ class GithubRepos extends React.Component{
       });
     })
     window.scrollTo(0, 0)
+  }
+
+  nextPage = () =>{
+    this.setState({
+      page: this.state.page + 1
+    })
+    this.componentDidMount();
+  }
+
+  previousPage = () => {
+    this.setState({
+      page: this.state.page - 1
+    })
+    if(this.state.page !== 0){
+      this.componentDidMount();
+    }
   }
 
   render(){
@@ -55,12 +71,12 @@ class GithubRepos extends React.Component{
           ))}
           <div className="row">
             <div className="col-sm">
-              <button className="btn btn-dark" > Previous page </button>
+              <button className="btn btn-dark" onClick={this.previousPage} > Previous page </button>
             </div>
             <div className="col-sm">
             </div>
             <div className="col-sm">
-              <button className="btn btn-dark" > Next page </button>
+              <button className="btn btn-dark" onClick={this.nextPage} > Next page </button>
             </div>
           </div>
         </div>
